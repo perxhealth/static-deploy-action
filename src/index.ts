@@ -17,9 +17,11 @@ import S3SyncClient from "s3-sync-client"
 async function run(): Promise<void> {
   try {
     // Retrieve all required inputs
-    const sourcePath = core.getInput("from")
-    const s3Path = core.getInput("to")
-    const cfDistroId = core.getInput("cloudfront-distribution-id")
+    const sourcePath = core.getInput("from", { required: true })
+    const s3Path = core.getInput("to", { required: true })
+    const cfDistroId = core.getInput("cloudfront-distribution-id", {
+      required: true,
+    })
 
     // Perform some basic validation on `sourcePath`
     assert(
