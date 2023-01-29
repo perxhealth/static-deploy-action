@@ -7,7 +7,12 @@
   "main": "dist/index.js",
   "homepage": "https://github.com/perxhealth/static-deploy-action",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "format": "prettier --write '**/*.ts'",
+    "format-check": "prettier --check '**/*.ts'",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build --source-map --license licenses.txt",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
