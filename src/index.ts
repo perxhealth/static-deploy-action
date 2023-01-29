@@ -2,6 +2,8 @@ import fs from "fs"
 import assert from "assert"
 
 import * as core from "@actions/core"
+import * as github from "@actions/github"
+
 import { S3Client } from "@aws-sdk/client-s3"
 
 import {
@@ -54,7 +56,10 @@ async function run(): Promise<void> {
     const result = await cf.send(
       new CreateInvalidationCommand({
         DistributionId: cfDistroId,
-        InvalidationBatch: undefined,
+        InvalidationBatch: {
+          CallerReference: github.context.sha,
+          Paths: { Quantity: 1, Items: ["/*"] },
+        },
       })
     )
 
