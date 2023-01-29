@@ -1,5 +1,6 @@
 import fs from "fs"
 import assert from "assert"
+import emoji from "node-emoji"
 
 import * as core from "@actions/core"
 import * as github from "@actions/github"
@@ -48,25 +49,33 @@ async function run(): Promise<void> {
     )
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
-    const s3Client = new S3Client({})
-    const { sync } = new S3SyncClient({ client: s3Client })
-    await sync(s3Path, sourcePath, { del: true })
+    await core.group("Sync to S3", async () => {
+      const s3Client = new S3Client({})
+      const { sync } = new S3SyncClient({ client: s3Client })
+      const { uploads, deletions } = await sync(s3Path, sourcePath, {
+        del: true,
+      })
+      core.info(emoji.emojify(`:outbox_tray: Uploaded objects: ${uploads}`))
+      core.info(emoji.emojify(`:do_not_litter: Deleted objects: ${deletions}`))
+    })
 
     // Invalidate the Cloudfront distribution so updated files will be
     // served from the S3 bucket
-    const cf = new CloudFrontClient({})
-    const result = await cf.send(
-      new CreateInvalidationCommand({
-        DistributionId: cfDistroId,
-        InvalidationBatch: {
-          CallerReference: github.context.sha,
-          Paths: { Quantity: 1, Items: ["/*"] },
-        },
-      })
-    )
-
-    // Set the invalidation's ID as an output and finish up!
-    core.setOutput("cloudfront-invalidation-id", result.Invalidation?.Id)
+    await core.group("Invalidate Cloudfront Distribution", async () => {
+      const cf = new CloudFrontClient({})
+      const result = await cf.send(
+        new CreateInvalidationCommand({
+          DistributionId: cfDistroId,
+          InvalidationBatch: {
+            CallerReference: github.context.sha,
+            Paths: { Quantity: 1, Items: ["/*"] },
+          },
+        })
+      )
+      // Set the invalidation's ID as an output and finish up!
+      core.info(`Invalidation ID: ${result.Invalidation?.Id}`)
+      core.setOutput("cloudfront-invalidation-id", result.Invalidation?.Id)
+    })
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message)
