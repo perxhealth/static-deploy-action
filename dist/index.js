@@ -44,7 +44,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__nccwpck_require__(57147));
 const assert_1 = __importDefault(__nccwpck_require__(39491));
-const node_emoji_1 = __importDefault(__nccwpck_require__(35244));
+const node_emoji_1 = __nccwpck_require__(35244);
 const core = __importStar(__nccwpck_require__(67733));
 const github = __importStar(__nccwpck_require__(53695));
 const client_s3_1 = __nccwpck_require__(27508);
@@ -69,18 +69,18 @@ function run() {
             // Ensure AWS_SECRET_ACCESS_KEY was picked up from the environment
             (0, assert_1.default)(process.env.AWS_SECRET_ACCESS_KEY !== undefined, "`AWS_SECRET_ACCESS_KEY` is not set in the environment. Has a previous action setup AWS credentials?");
             // Sync `from` input path up to `to` using `s3-client-sync` package
-            yield core.group("Sync to S3", () => __awaiter(this, void 0, void 0, function* () {
+            yield core.group((0, node_emoji_1.emojify)(":arrows_clockwise: Sync assets"), () => __awaiter(this, void 0, void 0, function* () {
                 const s3Client = new client_s3_1.S3Client({});
                 const { sync } = new s3_sync_client_1.default({ client: s3Client });
-                const { uploads, deletions } = yield sync(s3Path, sourcePath, {
+                const { uploads, deletions } = yield sync(sourcePath, s3Path, {
                     del: true,
                 });
-                core.info(node_emoji_1.default.emojify(`:outbox_tray: Uploaded objects: ${uploads}`));
-                core.info(node_emoji_1.default.emojify(`:do_not_litter: Deleted objects: ${deletions}`));
+                core.info(`Uploaded objects: ${uploads.length}`);
+                core.info(`Deleted objects: ${deletions.length}`);
             }));
             // Invalidate the Cloudfront distribution so updated files will be
             // served from the S3 bucket
-            yield core.group("Invalidate Cloudfront Distribution", () => __awaiter(this, void 0, void 0, function* () {
+            yield core.group((0, node_emoji_1.emojify)(":sparkles: Bust the cache"), () => __awaiter(this, void 0, void 0, function* () {
                 var _a, _b;
                 const cf = new client_cloudfront_1.CloudFrontClient({});
                 const result = yield cf.send(new client_cloudfront_1.CreateInvalidationCommand({

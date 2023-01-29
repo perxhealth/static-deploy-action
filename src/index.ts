@@ -1,6 +1,6 @@
 import fs from "fs"
 import assert from "assert"
-import emoji from "node-emoji"
+import { emojify } from "node-emoji"
 
 import * as core from "@actions/core"
 import * as github from "@actions/github"
@@ -49,19 +49,19 @@ async function run(): Promise<void> {
     )
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
-    await core.group("Sync to S3", async () => {
+    await core.group(emojify(":arrows_clockwise: Sync assets"), async () => {
       const s3Client = new S3Client({})
       const { sync } = new S3SyncClient({ client: s3Client })
-      const { uploads, deletions } = await sync(s3Path, sourcePath, {
+      const { uploads, deletions } = await sync(sourcePath, s3Path, {
         del: true,
       })
-      core.info(emoji.emojify(`:outbox_tray: Uploaded objects: ${uploads}`))
-      core.info(emoji.emojify(`:do_not_litter: Deleted objects: ${deletions}`))
+      core.info(`Uploaded objects: ${uploads.length}`)
+      core.info(`Deleted objects: ${deletions.length}`)
     })
 
     // Invalidate the Cloudfront distribution so updated files will be
     // served from the S3 bucket
-    await core.group("Invalidate Cloudfront Distribution", async () => {
+    await core.group(emojify(":sparkles: Bust the cache"), async () => {
       const cf = new CloudFrontClient({})
       const result = await cf.send(
         new CreateInvalidationCommand({
