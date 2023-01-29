@@ -1,0 +1,22 @@
+{
+  "name": "perxhealth-static-deploy-action",
+  "description": "Deploy static assets to an S3 bucket and bust its Cloudfront cache",
+  "version": "1.0.0",
+  "author": "Luke Rollans",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "homepage": "https://github.com/perxhealth/static-deploy-action",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Perx",
+    "GitHub",
+    "Actions",
+    "JavaScript",
+    "TypeScript"
+  ],
+  "bugs": {
+    "url": "https://github.com/perxhealth/static-deploy-action/issues"
+  }
+}
