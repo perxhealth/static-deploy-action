@@ -45,27 +45,30 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const fs_1 = __importDefault(__nccwpck_require__(57147));
 const assert_1 = __importDefault(__nccwpck_require__(39491));
 const core = __importStar(__nccwpck_require__(67733));
-// @ts-expect-error no types here just yet
-const s3_sync_client_1 = __nccwpck_require__(11495);
+const client_s3_1 = __nccwpck_require__(27508);
 const client_cloudfront_1 = __nccwpck_require__(26775);
+// @ts-expect-error no types here just yet
+const s3_sync_client_1 = __importDefault(__nccwpck_require__(11495));
 function run() {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             // Retrieve all required inputs
             const sourcePath = core.getInput("from");
-            const s3Path = core.getInput("s3-path");
+            const s3Path = core.getInput("to");
             const cfDistroId = core.getInput("cloudfront-distribution-id");
             // Perform some basic validation on `sourcePath`
             (0, assert_1.default)(fs_1.default.existsSync(sourcePath), `Path specified in 'from' input does not exist: ${sourcePath}`);
             // Perform some basic validation on `s3Path`
-            (0, assert_1.default)(s3Path.startsWith("s3://"), `Path specified in 's3-path' input must start with 's3://'`);
+            (0, assert_1.default)(s3Path.startsWith("s3://"), `Path specified in 'to' input must start with 's3://'`);
             // Ensure AWS_ACCESS_KEY_ID was picked up from the environment
             (0, assert_1.default)(process.env.AWS_ACCESS_KEY_ID !== undefined, "`AWS_ACCESS_KEY_ID` is not set in the environment. Has a previous action setup AWS credentials?");
             // Ensure AWS_SECRET_ACCESS_KEY was picked up from the environment
             (0, assert_1.default)(process.env.AWS_SECRET_ACCESS_KEY !== undefined, "`AWS_SECRET_ACCESS_KEY` is not set in the environment. Has a previous action setup AWS credentials?");
-            // Sync `from` input path up to `s3-path` using `s3-client-sync` package
-            yield (0, s3_sync_client_1.sync)(s3Path, sourcePath, { del: true });
+            // Sync `from` input path up to `to` using `s3-client-sync` package
+            const s3Client = new client_s3_1.S3Client({});
+            const { sync } = new s3_sync_client_1.default({ client: s3Client });
+            yield sync(s3Path, sourcePath, { del: true });
             // Invalidate the Cloudfront distribution so updated files will be
             // served from the S3 bucket
             const cf = new client_cloudfront_1.CloudFrontClient({});
