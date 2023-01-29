@@ -9,7 +9,6 @@ import { sync } from "s3-sync-client"
 import {
   CloudFrontClient,
   CreateInvalidationCommand,
-  CreateInvalidationCommandInput,
 } from "@aws-sdk/client-cloudfront"
 
 async function run(): Promise<void> {
