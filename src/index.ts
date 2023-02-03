@@ -1,5 +1,6 @@
 import fs from "fs"
 import assert from "assert"
+import { spawn } from "node:child_process"
 import { emojify } from "node-emoji"
 
 import * as core from "@actions/core"
@@ -50,37 +51,45 @@ async function run(): Promise<void> {
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
     await core.group(emojify(":arrows_clockwise: Sync assets"), async () => {
-      const s3Client = new S3Client({})
-      const { sync } = new S3SyncClient({ client: s3Client })
-      const { uploads, deletions } = await sync(sourcePath, s3Path, {
-        del: true,
-      })
-      core.info(`Uploaded objects: ${uploads.length}`)
-      core.info(`Deleted objects: ${deletions.length}`)
+      return awscli("s3", [`sync`, `dist/`, `"${s3Path}"`, `--delete`])
     })
 
-    // Invalidate the Cloudfront distribution so updated files will be
-    // served from the S3 bucket
+    // Invalidate the Cloudfront distribution, so the newly uploaded
+    // files will start being served
     await core.group(emojify(":sparkles: Bust the cache"), async () => {
-      const cf = new CloudFrontClient({})
-      const result = await cf.send(
-        new CreateInvalidationCommand({
-          DistributionId: cfDistroId,
-          InvalidationBatch: {
-            CallerReference: github.context.sha,
-            Paths: { Quantity: 1, Items: ["/*"] },
-          },
-        })
-      )
-      // Set the invalidation's ID as an output and finish up!
-      core.info(`Invalidation ID: ${result.Invalidation?.Id}`)
-      core.setOutput("cloudfront-invalidation-id", result.Invalidation?.Id)
+      return awscli("cloudfront", [
+        `create-invalidation`,
+        `--distribution-id`,
+        `"${cfDistroId}"`,
+        `--paths`,
+        `"/*"`,
+      ])
     })
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message)
     }
   }
+}
+
+// Helper to shell out to AWS CLI with a Promise interface, and to
+// stream stdout progress
+type AWSCLIPromise = (service: string, args?: string[]) => Promise<void>
+
+const awscli: AWSCLIPromise = (service, args = []) => {
+  return new Promise((resolve, reject) => {
+    const spawned = spawn("aws", [service, ...args])
+
+    spawned.stdout.on("data", console.log)
+    spawned.stderr.on("data", console.log)
+
+    spawned.on("close", (code) => {
+      if (code === 0) {
+        resolve()
+      }
+      reject()
+    })
+  })
 }
 
 run()
