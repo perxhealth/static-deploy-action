@@ -90,8 +90,12 @@ function run() {
 const awscli = (service, args = []) => {
     return new Promise((resolve, reject) => {
         const spawned = (0, node_child_process_1.spawn)("aws", [service, ...args]);
-        spawned.stdout.on("data", console.log);
-        spawned.stderr.on("data", console.log);
+        spawned.stdout.on("data", (data) => {
+            console.log(`progress: ${data}`);
+        });
+        spawned.stderr.on("data", (data) => {
+            console.log(`error: ${data}`);
+        });
         spawned.on("close", (code) => {
             if (code === 0) {
                 resolve();

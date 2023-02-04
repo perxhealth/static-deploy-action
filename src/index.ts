@@ -80,8 +80,12 @@ const awscli: AWSCLIPromise = (service, args = []) => {
   return new Promise((resolve, reject) => {
     const spawned = spawn("aws", [service, ...args])
 
-    spawned.stdout.on("data", console.log)
-    spawned.stderr.on("data", console.log)
+    spawned.stdout.on("data", (data) => {
+      console.log(`progress: ${data}`)
+    })
+    spawned.stderr.on("data", (data) => {
+      console.log(`error: ${data}`)
+    })
 
     spawned.on("close", (code) => {
       if (code === 0) {
