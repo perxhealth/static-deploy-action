@@ -4,7 +4,6 @@ import { spawn } from "node:child_process"
 import { emojify } from "node-emoji"
 
 import * as core from "@actions/core"
-import * as github from "@actions/github"
 
 async function run(): Promise<void> {
   try {
