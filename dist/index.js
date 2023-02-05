@@ -66,7 +66,7 @@ function run() {
             (0, assert_1.default)(process.env.AWS_SECRET_ACCESS_KEY !== undefined, "`AWS_SECRET_ACCESS_KEY` is not set in the environment. Has a previous action setup AWS credentials?");
             // Sync `from` input path up to `to` using `s3-client-sync` package
             yield core.group((0, node_emoji_1.emojify)(":arrows_clockwise: Sync assets"), () => __awaiter(this, void 0, void 0, function* () {
-                return awscli("s3", [`sync`, `dist/`, `"${s3Path}"`, `--delete`]);
+                return awscli("s3", [`sync`, `dist/`, `${s3Path}`, `--delete`]);
             }));
             // Invalidate the Cloudfront distribution, so the newly uploaded
             // files will start being served
@@ -74,9 +74,9 @@ function run() {
                 return awscli("cloudfront", [
                     `create-invalidation`,
                     `--distribution-id`,
-                    `"${cfDistroId}"`,
+                    `${cfDistroId}`,
                     `--paths`,
-                    `"/*"`,
+                    `/*`,
                 ]);
             }));
         }
@@ -89,7 +89,9 @@ function run() {
 }
 const awscli = (service, args = []) => {
     return new Promise((resolve, reject) => {
-        const spawned = (0, node_child_process_1.spawn)("aws", [service, ...args]);
+        const line = [service, ...args];
+        const spawned = (0, node_child_process_1.spawn)("aws", line);
+        console.log(`ran: '${line}'`);
         spawned.stdout.on("data", (data) => {
             console.log(`progress: ${data}`);
         });

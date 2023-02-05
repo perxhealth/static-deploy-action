@@ -51,7 +51,7 @@ async function run(): Promise<void> {
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
     await core.group(emojify(":arrows_clockwise: Sync assets"), async () => {
-      return awscli("s3", [`sync`, `dist/`, `"${s3Path}"`, `--delete`])
+      return awscli("s3", [`sync`, `dist/`, `${s3Path}`, `--delete`])
     })
 
     // Invalidate the Cloudfront distribution, so the newly uploaded
@@ -60,9 +60,9 @@ async function run(): Promise<void> {
       return awscli("cloudfront", [
         `create-invalidation`,
         `--distribution-id`,
-        `"${cfDistroId}"`,
+        `${cfDistroId}`,
         `--paths`,
-        `"/*"`,
+        `/*`,
       ])
     })
   } catch (error) {
@@ -78,7 +78,10 @@ type AWSCLIPromise = (service: string, args?: string[]) => Promise<void>
 
 const awscli: AWSCLIPromise = (service, args = []) => {
   return new Promise((resolve, reject) => {
-    const spawned = spawn("aws", [service, ...args])
+    const line = [service, ...args]
+    const spawned = spawn("aws", line)
+
+    console.log(`ran: '${line}'`)
 
     spawned.stdout.on("data", (data) => {
       console.log(`progress: ${data}`)
