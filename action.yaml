@@ -1,4 +1,4 @@
-name: '"Static Deploy" Action For GitHub Actions'
+name: '"Static Deploy" for GitHub Actions'
 description: Deploy static assets to an S3 bucket and invalidate its Cloudfront distribution
 branding:
   icon: share
@@ -13,9 +13,6 @@ inputs:
   cloudfront-distribution-id:
     description: Nominate the Cloudfront Distribution which serves assets from the bucket
     required: true
-outputs:
-  cloudfront-invalidation-id:
-    description: ID returned by AWS when calling CreateInvalidation
 runs:
   using: node16
   main: dist/index.js
