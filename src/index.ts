@@ -78,13 +78,10 @@ type AWSCLIPromise = (service: string, args?: string[]) => Promise<void>
 
 const awscli: AWSCLIPromise = (service, args = []) => {
   return new Promise((resolve, reject) => {
-    const line = [service, ...args]
-    const spawned = spawn("aws", line)
-
-    console.log(`ran: '${line}'`)
+    const spawned = spawn("aws", [service, ...args])
 
     spawned.stdout.on("data", (data) => {
-      console.log(`progress: ${data}`)
+      console.log(data.toString())
     })
     spawned.stderr.on("data", (data) => {
       console.log(`error: ${data}`)
