@@ -6,16 +6,6 @@ import { emojify } from "node-emoji"
 import * as core from "@actions/core"
 import * as github from "@actions/github"
 
-import { S3Client } from "@aws-sdk/client-s3"
-
-import {
-  CloudFrontClient,
-  CreateInvalidationCommand,
-} from "@aws-sdk/client-cloudfront"
-
-// @ts-expect-error no types here just yet
-import S3SyncClient from "s3-sync-client"
-
 async function run(): Promise<void> {
   try {
     // Retrieve all required inputs
