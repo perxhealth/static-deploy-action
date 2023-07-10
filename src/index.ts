@@ -40,7 +40,7 @@ async function run(): Promise<void> {
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
     await core.group(emojify(":arrows_clockwise: Sync assets"), async () => {
-      return awscli("s3", [`sync`, `dist/`, `${s3Path}`, `--delete`])
+      return awscli("s3", [`sync`, `${sourcePath}`, `${s3Path}`, `--delete`])
     })
 
     // Invalidate the Cloudfront distribution, so the newly uploaded
@@ -79,8 +79,9 @@ const awscli: AWSCLIPromise = (service, args = []) => {
     spawned.on("close", (code) => {
       if (code === 0) {
         resolve()
+      } else {
+        reject()
       }
-      reject()
     })
   })
 }
