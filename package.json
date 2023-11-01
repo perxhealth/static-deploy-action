@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.7",
-    "@types/node": "^20.8.9",
+    "@types/node": "^20.8.10",
     "@types/node-emoji": "^2.1.0",
     "@vercel/ncc": "^0.38.1",
     "eslint": "^8.52.0",
