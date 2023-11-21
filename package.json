@@ -33,7 +33,7 @@
     "node-emoji": "^2.1.0"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.8",
+    "@types/jest": "^29.5.9",
     "@types/node": "^20.9.3",
     "@types/node-emoji": "^2.1.0",
     "@vercel/ncc": "^0.38.1",
