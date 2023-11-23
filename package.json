@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "node-emoji": "^2.1.0"
+    "node-emoji": "^2.1.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.8",
