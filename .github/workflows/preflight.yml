@@ -1,0 +1,92 @@
+name: Preflight
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - 'releases/*'
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve versions
+        uses: perxhealth/tool-versions-action@v1
+        id: versions
+
+      - name: Node setup
+        uses: perxhealth/setup-pnpm-action@v2
+        with:
+          node-version: ${{ steps.versions.outputs.nodejs_version }}
+          pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
+          install-deps: true
+
+      - name: Lint
+        run: pnpm lint
+
+  format:
+    name: format check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve versions
+        uses: perxhealth/tool-versions-action@v1
+        id: versions
+
+      - name: Node setup
+        uses: perxhealth/setup-pnpm-action@v2
+        with:
+          node-version: ${{ steps.versions.outputs.nodejs_version }}
+          pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
+          install-deps: true
+
+      - name: Format check
+        run: pnpm format-check
+
+  typecheck:
+    name: type check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve versions
+        uses: perxhealth/tool-versions-action@v1
+        id: versions
+
+      - name: Node setup
+        uses: perxhealth/setup-pnpm-action@v2
+        with:
+          node-version: ${{ steps.versions.outputs.nodejs_version }}
+          pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
+          install-deps: true
+
+      - name: ʦ Compile
+        run: pnpm typecheck
+
+  package:
+    name: 📦 Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Resolve versions
+        uses: perxhealth/tool-versions-action@v1
+        id: versions
+
+      - name: Node setup
+        uses: perxhealth/setup-pnpm-action@v2
+        with:
+          node-version: ${{ steps.versions.outputs.nodejs_version }}
+          pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
+          install-deps: true
+
+      - name: Package release
+        run: pnpm package
