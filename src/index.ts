@@ -1,5 +1,5 @@
-import fs from "fs"
 import assert from "assert"
+import fs from "fs"
 import { spawn } from "node:child_process"
 import { emojify } from "node-emoji"
 
@@ -17,41 +17,41 @@ async function run(): Promise<void> {
     // Perform some basic validation on `sourcePath`
     assert(
       fs.existsSync(sourcePath),
-      `Path specified in 'from' input does not exist: ${sourcePath}`
+      `Path specified in 'from' input does not exist: ${sourcePath}`,
     )
 
     // Perform some basic validation on `s3Path`
     assert(
       s3Path.startsWith("s3://"),
-      `Path specified in 'to' input must start with 's3://'`
+      "Path specified in 'to' input must start with 's3://'",
     )
 
     // Ensure AWS_ACCESS_KEY_ID was picked up from the environment
     assert(
       process.env.AWS_ACCESS_KEY_ID !== undefined,
-      "`AWS_ACCESS_KEY_ID` is not set in the environment. Has a previous action setup AWS credentials?"
+      "`AWS_ACCESS_KEY_ID` is not set in the environment. Has a previous action setup AWS credentials?",
     )
 
     // Ensure AWS_SECRET_ACCESS_KEY was picked up from the environment
     assert(
       process.env.AWS_SECRET_ACCESS_KEY !== undefined,
-      "`AWS_SECRET_ACCESS_KEY` is not set in the environment. Has a previous action setup AWS credentials?"
+      "`AWS_SECRET_ACCESS_KEY` is not set in the environment. Has a previous action setup AWS credentials?",
     )
 
     // Sync `from` input path up to `to` using `s3-client-sync` package
     await core.group(emojify(":arrows_clockwise: Sync assets"), async () => {
-      return awscli("s3", [`sync`, `${sourcePath}`, `${s3Path}`, `--delete`])
+      return awscli("s3", ["sync", `${sourcePath}`, `${s3Path}`, "--delete"])
     })
 
     // Invalidate the Cloudfront distribution, so the newly uploaded
     // files will start being served
     await core.group(emojify(":sparkles: Bust the cache"), async () => {
       return awscli("cloudfront", [
-        `create-invalidation`,
-        `--distribution-id`,
+        "create-invalidation",
+        "--distribution-id",
         `${cfDistroId}`,
-        `--paths`,
-        `/*`,
+        "--paths",
+        "/*",
       ])
     })
   } catch (error) {
