@@ -34,7 +34,7 @@
     "node-emoji": "^2.1.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.5.3",
+    "@biomejs/biome": "^1.6.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.25",
     "@types/node-emoji": "^2.1.0",
