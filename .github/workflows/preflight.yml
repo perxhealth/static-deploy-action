@@ -19,7 +19,7 @@ jobs:
         id: versions
 
       - name: Node setup
-        uses: perxhealth/setup-pnpm-action@v2
+        uses: perxhealth/setup-pnpm-action@v3
         with:
           node-version: ${{ steps.versions.outputs.nodejs_version }}
           pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
@@ -40,7 +40,7 @@ jobs:
         id: versions
 
       - name: Node setup
-        uses: perxhealth/setup-pnpm-action@v2
+        uses: perxhealth/setup-pnpm-action@v3
         with:
           node-version: ${{ steps.versions.outputs.nodejs_version }}
           pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
@@ -61,7 +61,7 @@ jobs:
         id: versions
 
       - name: Node setup
-        uses: perxhealth/setup-pnpm-action@v2
+        uses: perxhealth/setup-pnpm-action@v3
         with:
           node-version: ${{ steps.versions.outputs.nodejs_version }}
           pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
@@ -82,7 +82,7 @@ jobs:
         id: versions
 
       - name: Node setup
-        uses: perxhealth/setup-pnpm-action@v2
+        uses: perxhealth/setup-pnpm-action@v3
         with:
           node-version: ${{ steps.versions.outputs.nodejs_version }}
           pnpm-version: ${{ steps.versions.outputs.pnpm_version }}
