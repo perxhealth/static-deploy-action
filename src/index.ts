@@ -1,6 +1,6 @@
-import assert from "assert"
-import fs from "fs"
+import assert from "node:assert"
 import { spawn } from "node:child_process"
+import fs from "node:fs"
 import { emojify } from "node-emoji"
 
 import * as core from "@actions/core"
