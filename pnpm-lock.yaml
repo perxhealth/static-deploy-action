@@ -28,8 +28,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.0
       '@vercel/ncc':
-        specifier: ^0.38.2
-        version: 0.38.2
+        specifier: ^0.38.3
+        version: 0.38.3
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@22.9.0)
@@ -430,8 +430,8 @@ packages:
   '@types/yargs@17.0.20':
     resolution: {integrity: sha512-eknWrTHofQuPk2iuqDm1waA7V6xPlbgBoaaXEgYkClhLOnB0TtbW+srJaOToAgawPxPlHQzwypFA2bhZaUGP5A==}
 
-  '@vercel/ncc@0.38.2':
-    resolution: {integrity: sha512-3yel3jaxUg9pHBv4+KeC9qlbdZPug+UMtUOlhvpDYCMSgcNSrS2Hv1LoqMsOV7hf2lYscx+BESfJOIla1WsmMQ==}
+  '@vercel/ncc@0.38.3':
+    resolution: {integrity: sha512-rnK6hJBS6mwc+Bkab+PGPs9OiS0i/3kdTO+CkI8V0/VrW3vmz7O2Pxjw/owOlmo6PKEIxRSeZKv/kuL9itnpYA==}
     hasBin: true
 
   ansi-escapes@4.3.2:
@@ -1858,7 +1858,7 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.0
 
-  '@vercel/ncc@0.38.2': {}
+  '@vercel/ncc@0.38.3': {}
 
   ansi-escapes@4.3.2:
     dependencies:
